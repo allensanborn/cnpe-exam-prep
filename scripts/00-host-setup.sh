@@ -12,7 +12,7 @@ echo "    RAM: ${TOTAL_GB}G   cores: ${CORES}   free disk in \$HOME: ${FREE_GB}G
 
 log "Installing base packages (pacman)"
 PKGS=(docker docker-buildx git jq yq curl wget unzip tar make openssh
-      bash-completion python-yaml)
+      bash-completion python-yaml mise skopeo)
 MISSING=()
 for p in "${PKGS[@]}"; do pacman -Qq "$p" >/dev/null 2>&1 || MISSING+=("$p"); done
 if [ ${#MISSING[@]} -eq 0 ]; then

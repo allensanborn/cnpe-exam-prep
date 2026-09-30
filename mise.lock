@@ -2,6 +2,31 @@
 
 lockfile_version = 2
 
+[[tools."aqua:ahmetb/kubectx/kubens"]]
+version = "0.11.0"
+backend = "aqua:ahmetb/kubectx/kubens"
+specifiers = ["0.11"]
+
+[tools."aqua:ahmetb/kubectx/kubens"."platforms.linux-arm64"]
+checksum = "sha256:37058abe82ef20c93b44f3dc8ca2382dbb95d416cec958fbf7b8f79f011be86c"
+url = "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_linux_arm64.tar.gz"
+url_api = "https://api.github.com/repos/ahmetb/kubectx/releases/assets/382591002"
+
+[tools."aqua:ahmetb/kubectx/kubens"."platforms.linux-x64"]
+checksum = "sha256:326c021c7b35468ed9a187b361198d0f22ae32828139c65eb6670c0d8301cc09"
+url = "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_linux_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/ahmetb/kubectx/releases/assets/382591017"
+
+[tools."aqua:ahmetb/kubectx/kubens"."platforms.macos-arm64"]
+checksum = "sha256:b1c87ddca22f1afc3e980ac807a715cd1183750022798d28a0a4e0cf66bec4e3"
+url = "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_darwin_arm64.tar.gz"
+url_api = "https://api.github.com/repos/ahmetb/kubectx/releases/assets/382591004"
+
+[tools."aqua:ahmetb/kubectx/kubens"."platforms.macos-x64"]
+checksum = "sha256:9dbe1bf26fd911f2f56661a2f34bf2fe32dfd3af5f11287d0a864da92a746509"
+url = "https://github.com/ahmetb/kubectx/releases/download/v0.11.0/kubens_v0.11.0_darwin_x86_64.tar.gz"
+url_api = "https://api.github.com/repos/ahmetb/kubectx/releases/assets/382590987"
+
 [[tools.argo-rollouts]]
 version = "1.10.0"
 backend = "aqua:argoproj/argo-rollouts"

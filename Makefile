@@ -10,10 +10,10 @@ help: ## Show this help
 ## ── one-time ────────────────────────────────────────────────────────────
 host:    ## Kernel limits, docker, thermal advice (run once, needs sudo)
 	@$(S)/00-host-setup.sh
-tools:   ## Install or upgrade every CLI into ~/.local/bin
-	@$(S)/01-tools.sh
-refresh: ## Everything 'tools' does, plus updating an existing Gitea container
-	@$(S)/01-tools.sh
+tools:   ## Install every CLI in mise.toml at its locked version, plus shell completion
+	@mise install && mise run setup
+refresh: ## Upgrade the CLIs within mise.toml's versions, plus updating an existing Gitea container
+	@mise upgrade && mise run setup
 	@CNPE_REFRESH=1 $(S)/11-gitea.sh --refresh-only
 
 ## ── the lab ─────────────────────────────────────────────────────────────

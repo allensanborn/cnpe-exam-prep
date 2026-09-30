@@ -46,7 +46,7 @@ The [dashboard](curriculum/index.html) maps every official competency to a secti
 | `mesh` | Second cluster with [Istio](https://istio.io/) ambient and [Flagger](https://flagger.app/) | Security (15%) |
 | `portal` | [Backstage](https://backstage.io/) on the host, with a software template that publishes to Gitea | Platform APIs (25%) |
 
-Versions as tested: kind 0.33.0, Helm 4.2.2, Cilium 1.20.1, Argo CD 10.9.0 (chart), Crossplane 2.4.0 (chart), kube-prometheus-stack 88.5.3, Istio 1.30.3, Flux 2.9.4. `K8S_IMAGE` pins Kubernetes 1.37.0; the curriculum's September output was captured on 1.36.1, the pin in force before that bump. Only Kubernetes is pinned, by `K8S_IMAGE` in `lab.env`; `scripts/01-tools.sh` installs kind and the other CLIs from their latest release, so those numbers record what was tested rather than what you will get.
+Versions as tested: kind 0.33.0, Helm 4.2.2, Cilium 1.20.1, Argo CD 10.9.0 (chart), Crossplane 2.4.0 (chart), kube-prometheus-stack 88.5.3, Istio 1.30.3, Flux 2.9.4. `K8S_IMAGE` pins Kubernetes 1.37.0; the curriculum's September output was captured on 1.36.1, the pin in force before that bump. Kubernetes is pinned by `K8S_IMAGE` in `lab.env`, and kind and the other CLIs by `mise.lock`; Helm charts still install at their latest release, so the chart numbers record what was tested rather than what you will get.
 
 Only the Kubernetes node image is pinned, by digest, in `lab.env`. Helm charts and the Tekton manifests float on purpose, so a fresh install gets whatever is current and the versions above will drift. That is the right trade for exam prep, because chart values and API versions moving under you is the thing the exam actually tests. When something breaks, `kubectl api-resources | grep <tool>` and `kubectl explain <kind>` are the fix. If you want reproducibility instead, pinning `--version` in `helmi` (`scripts/lib.sh`) is a one-line change.
 
@@ -115,7 +115,7 @@ Shell tooling installed by `make tools`:
 [k9s](https://k9scli.io/) ·
 [stern](https://github.com/stern/stern) ·
 [kubectx](https://github.com/ahmetb/kubectx) ·
-[mise](https://mise.jdx.dev/) (pins Node 24 for Backstage, and can install every CLI here instead)
+[mise](https://mise.jdx.dev/) (installs every CLI here, and pins Node 24 for Backstage)
 
 ## Hardware and build time
 
@@ -153,7 +153,7 @@ watch -n2 'grep MHz /proc/cpuinfo | head'   # ~800 MHz means you are throttling
 git clone https://github.com/rbstp/cnpe-exam-prep.git && cd cnpe-exam-prep
 cp lab.env.example lab.env      # set GITEA_PASS
 make host                       # sysctls, docker, kernel limits. needs sudo
-make tools                      # every CLI into ~/.local/bin
+make tools                      # every CLI, through mise
 make core                       # cluster + git server + Argo CD/Flux/Rollouts/Workflows
 make cicd api obs sec spire     # the rest, one at a time
 make validate                   # 71 functional checks
@@ -172,15 +172,13 @@ More than just `make host`, so it is worth knowing before you run any of it:
 - `make down` stops that process by the recorded PID.
 - `make portal` runs `sudo npm i -g yarn` only if yarn is missing.
 
-`make tools` installs every CLI into `~/.local/bin` and needs sudo only for the `pacman` packages. Three upstream installers are piped to a shell unpinned (crossplane, istioctl, linkerd), which is how those projects document installation, but read them first if that bothers you.
-
-On a machine with mise, `mise install` in the clone installs the same CLIs from `mise.toml`, at the exact builds and checksums in `mise.lock`. Those stay put until someone runs `mise upgrade`, where `make tools` always takes the latest release.
+`make tools` runs `mise install`, which installs every CLI in `mise.toml` at the exact build and checksum recorded in `mise.lock`, then `mise run setup`. That task writes bash completion to `~/.bash_completion.d`, appends a `cnpe-lab tooling` block to `~/.bashrc` once (`mise activate`, `alias k=kubectl`, `$do` and `$now`), refreshes Helm repository indexes and records versions in `.lab-versions.json`. No sudo: `make host` installs mise itself, with pacman. The CLIs are on PATH inside the clone, where mise activates them.
 
 ## Targets
 
 ```
 make host            Kernel limits, docker, thermal advice (run once, needs sudo)
-make tools           Install every CLI into ~/.local/bin
+make tools           Install every CLI in mise.toml, plus shell completion
 make up              Create the cluster: kind + Cilium + LB + metrics + VPA + registry
 make gitea           Local git server, seeded repos, CoreDNS entry
 make gitops          Argo CD, Argo Rollouts, Argo Workflows, Flux

@@ -1,6 +1,6 @@
-# Every CLI the Makefile's targets call (scripts/01-tools.sh installs the same set).
-# Not here: docker, git, curl and the other host packages (scripts/00-host-setup.sh),
-# and skopeo, which ships no upstream binaries.
+# Every CLI the lab calls. `make tools` installs them and runs the setup task below.
+# Not here: docker, git, curl, skopeo and the other host packages, which
+# scripts/00-host-setup.sh installs with pacman (skopeo ships no upstream binaries).
 [tools]
 # Backstage's create-app only accepts Node 22 or 24.
 node = "24"
@@ -20,6 +20,7 @@ kustomize = "5.8"
 k9s = "0.51"
 stern = "1.34"
 kubectx = "0.11"
+"aqua:ahmetb/kubectx/kubens" = "0.11"
 kubebuilder = "4.16"
 
 argocd = "3.5"
@@ -44,3 +45,48 @@ cosign = "3.1"
 lockfile = true
 # The lab runs on x86_64 Linux; contributors also work on macOS.
 lockfile_platforms = ["linux-x64", "linux-arm64", "macos-x64", "macos-arm64"]
+
+[tasks.setup]
+description = "Shell completion, Helm indexes and the versions report"
+depends = ["shell", "helm-repos", "versions"]
+
+[tasks.shell]
+description = "Bash completion for the lab CLIs, and the cnpe-lab block in ~/.bashrc"
+shell = "bash -c"
+run = """
+mkdir -p "$HOME/.bash_completion.d"
+for t in kubectl helm kind argocd flux tkn linkerd istioctl; do
+  "$t" completion bash > "$HOME/.bash_completion.d/$t" 2>/dev/null || true
+done
+grep -q 'cnpe-lab tooling' "$HOME/.bashrc" 2>/dev/null || cat >> "$HOME/.bashrc" <<'RC'
+
+# ── cnpe-lab tooling ─────────────────────────────────────────────
+eval "$(mise activate bash)"
+for f in "$HOME"/.bash_completion.d/*; do [ -r "$f" ] && . "$f"; done
+alias k=kubectl
+complete -o default -F __start_kubectl k
+export do='--dry-run=client -o yaml'        # exam muscle memory
+export now='--force --grace-period=0'
+RC
+"""
+
+[tasks.helm-repos]
+description = "Refresh every configured Helm repository index"
+shell = "bash -c"
+run = """
+if [ "$(helm repo list -o json 2>/dev/null | jq 'length')" -gt 0 ] 2>/dev/null; then
+  helm repo update >/dev/null
+fi
+"""
+
+[tasks.versions]
+description = "Record the installed CLI versions in .lab-versions.json"
+shell = "bash -c"
+run = """
+set -euo pipefail
+old='{}'; [ -s .lab-versions.json ] && old=$(cat .lab-versions.json)
+tools=$(mise ls --current --local --json | jq '[to_entries[] | {name: .key, version: .value[0].version}]')
+jq -n --argjson old "$old" --argjson tools "$tools" --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  '$old + {generated_at: $at, tools: $tools} | del(.upstream_releases)' > .lab-versions.json.tmp
+mv .lab-versions.json.tmp .lab-versions.json
+"""

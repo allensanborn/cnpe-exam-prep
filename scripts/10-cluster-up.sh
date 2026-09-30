@@ -122,8 +122,9 @@ fi
 if [ "$SMOKE" != 1 ] && ! pgrep -f cloud-provider-kind >/dev/null 2>&1; then
   if command -v cloud-provider-kind >/dev/null; then
     log "Starting cloud-provider-kind (gives Services type=LoadBalancer real IPs)"
-    # sudo resets PATH, so cloud-provider-kind has to be called by absolute path.
-    CPK="$(command -v cloud-provider-kind)"
+    # sudo resets PATH, so cloud-provider-kind has to be called by absolute path,
+    # and not by a mise shim, which root cannot resolve.
+    CPK="$(mise which cloud-provider-kind 2>/dev/null || command -v cloud-provider-kind)"
     if sudo -n true 2>/dev/null; then
       # shellcheck disable=SC2024
       sudo -b nohup "$CPK" --gateway-channel=disabled > /tmp/cnpe-lab/cpk.log 2>&1
