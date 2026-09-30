@@ -2,31 +2,6 @@
 
 lockfile_version = 2
 
-[[tools.argo]]
-version = "4.1.4"
-backend = "aqua:argoproj/argo-workflows"
-specifiers = ["4.1"]
-
-[tools.argo."platforms.linux-arm64"]
-checksum = "sha256:f95eb2f6c3b3481724a76f5f90269d09a8be3a4529ee08eb9287adaab3622192"
-url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-linux-arm64.gz"
-url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345418"
-
-[tools.argo."platforms.linux-x64"]
-checksum = "sha256:2c8ef41d53593f2ee64d85fb69b631c89a0fc2c57e6ce011422caa525a97ec58"
-url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-linux-amd64.gz"
-url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345429"
-
-[tools.argo."platforms.macos-arm64"]
-checksum = "sha256:7dc8d83e3524d1b603bc1749ea6e2919624a4ada2b9ad8dbb28c428e32749fe4"
-url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-darwin-amd64.gz"
-url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345423"
-
-[tools.argo."platforms.macos-x64"]
-checksum = "sha256:7dc8d83e3524d1b603bc1749ea6e2919624a4ada2b9ad8dbb28c428e32749fe4"
-url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-darwin-amd64.gz"
-url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345423"
-
 [[tools.argo-rollouts]]
 version = "1.10.0"
 backend = "aqua:argoproj/argo-rollouts"
@@ -208,6 +183,31 @@ url_api = "https://api.github.com/repos/fluxcd/flux2/releases/assets/538282892"
 
 [tools.flux2."platforms.macos-x64".provenance.slsa]
 url = "https://github.com/fluxcd/flux2/releases/download/v2.9.5/provenance.intoto.jsonl"
+
+[[tools."github:argoproj/argo-workflows"]]
+version = "4.1.4"
+backend = "github:argoproj/argo-workflows"
+specifiers = ["4.1"]
+
+[tools."github:argoproj/argo-workflows"."platforms.linux-arm64"]
+checksum = "sha256:f95eb2f6c3b3481724a76f5f90269d09a8be3a4529ee08eb9287adaab3622192"
+url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-linux-arm64.gz"
+url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345418"
+
+[tools."github:argoproj/argo-workflows"."platforms.linux-x64"]
+checksum = "sha256:2c8ef41d53593f2ee64d85fb69b631c89a0fc2c57e6ce011422caa525a97ec58"
+url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-linux-amd64.gz"
+url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345429"
+
+[tools."github:argoproj/argo-workflows"."platforms.macos-arm64"]
+checksum = "sha256:010e265e19acc4af4441307811cf342f897db4c8ae598a0983fbb2a82dadde79"
+url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-darwin-arm64.gz"
+url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345421"
+
+[tools."github:argoproj/argo-workflows"."platforms.macos-x64"]
+checksum = "sha256:7dc8d83e3524d1b603bc1749ea6e2919624a4ada2b9ad8dbb28c428e32749fe4"
+url = "https://github.com/argoproj/argo-workflows/releases/download/v4.1.4/argo-darwin-amd64.gz"
+url_api = "https://api.github.com/repos/argoproj/argo-workflows/releases/assets/572345423"
 
 [[tools."github:cilium/hubble"]]
 version = "1.19.4"
@@ -613,6 +613,31 @@ provenance = "github-attestations"
 checksum = "sha256:419c8d110a393add7e20480f785a9cc2213978cdb10f8198ee7bb38b02cdb0fe"
 url = "https://github.com/astral-sh/python-build-standalone/releases/download/20260929/cpython-3.14.7+20260929-x86_64-apple-darwin-install_only_stripped.tar.gz"
 provenance = "github-attestations"
+
+[[tools.shellcheck]]
+version = "0.11.0"
+backend = "aqua:koalaman/shellcheck"
+specifiers = ["0.11"]
+
+[tools.shellcheck."platforms.linux-arm64"]
+checksum = "sha256:12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588"
+url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.aarch64.tar.xz"
+url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056934"
+
+[tools.shellcheck."platforms.linux-x64"]
+checksum = "sha256:8c3be12b05d5c177a04c29e3c78ce89ac86f1595681cab149b65b97c4e227198"
+url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz"
+url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056942"
+
+[tools.shellcheck."platforms.macos-arm64"]
+checksum = "sha256:56affdd8de5527894dca6dc3d7e0a99a873b0f004d7aabc30ae407d3f48b0a79"
+url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.aarch64.tar.xz"
+url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056932"
+
+[tools.shellcheck."platforms.macos-x64"]
+checksum = "sha256:3c89db4edcab7cf1c27bff178882e0f6f27f7afdf54e859fa041fca10febe4c6"
+url = "https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.darwin.x86_64.tar.xz"
+url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/279056930"
 
 [[tools.stern]]
 version = "1.34.0"

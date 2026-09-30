@@ -10,6 +10,7 @@ python = "3.14"
 go = "1.27"
 jq = "1.8"
 yq = "4.54"
+shellcheck = "0.11"
 
 kubectl = "1.37"
 helm = "4.3"
@@ -23,7 +24,8 @@ kubebuilder = "4.16"
 
 argocd = "3.5"
 argo-rollouts = "1.10"
-argo = "4.1"
+# aqua's registry entry hands Apple Silicon the x86_64 build.
+"github:argoproj/argo-workflows" = "4.1"
 flux2 = "2.9"
 tekton-cli = "0.46"
 crossplane-cli = "2.5"
