@@ -70,6 +70,31 @@ comments were caught this way during the American-spelling pass.
 
 ## Working in this repo
 
+### Layout
+
+Three independent parts share the repo:
+
+- **The lab**: `Makefile` targets call `scripts/NN-*.sh`, one per layer (`make up`,
+  `gitops`, `obs`, ...), each installable alone. Every script sources
+  `scripts/lib.sh`, which refuses to run without `lab.env` (copy
+  `lab.env.example`) and provides `helmi`, `kctx`, `wait_rollout`, `poll`.
+  `make validate` (`92-validate.sh`) proves each layer works; `make break` and
+  `break-fix` inject and repair faults. CLIs are pinned in `mise.toml` and
+  `mise.lock` (`make tools`); only the kind node image is pinned in `lab.env`,
+  Helm charts float on purpose.
+- **The study site** (`curriculum/`): static HTML, runs from `file://`. Sections
+  are `0N-domain/*.html`; `assets/nav.js` is the section manifest. Hand-written JS
+  (`app.js`, `widgets.js`, `drill.js`, `sync.js`, `theme.js`) is type-checked via
+  JSDoc against `assets/cnpe.d.ts`. The quest (`src/game/`) and the DOM-free
+  `merge`/`syntax` modules (`src/console/`) are TypeScript compiled into
+  `assets/`. All progress lives in one `cnpe:v2` localStorage store, merged by
+  `merge.js`. `curriculum/README.md` describes every asset and tool in detail.
+- **Progress sync** (`sync/`): an opt-in Cloudflare Worker with D1, see
+  `docs/progress-sync.md`.
+
+`make site` stages `_site` exactly as GitHub Pages publishes it, including the
+single-file `console.html` built by `curriculum/tools/bundle.py`.
+
 ### Generated files are committed, so regenerate them
 
 The site has no build step at read time. Anything generated is committed, and CI
@@ -92,7 +117,12 @@ make ts-check                    # compiled assets match their sources
 make merge syntax sim worker     # the DOM-free suites, plain node
 make site && curriculum/tools/check-site.sh _site
 make browser                     # headless Chromium end to end
+shellcheck -x --severity=warning scripts/*.sh curriculum/tools/*.sh
 ```
+
+`npm ci` installs TypeScript and Playwright for the first two and `make browser`.
+To run one browser area, name its file in `curriculum/tools/browser-checks/`:
+`AREAS=sync,theme make browser`.
 
 `make browser` needs a Playwright Chromium matching the pinned version. Where the
 environment ships a different build, point the runner at it:
