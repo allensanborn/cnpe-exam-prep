@@ -1,12 +1,11 @@
 # Every CLI the lab calls. `make tools` installs them and runs the setup task below.
-# Not here: docker, git, curl, skopeo and the other host packages, which
-# scripts/00-host-setup.sh installs with pacman (skopeo ships no upstream binaries).
+# Not here: docker, git, curl, python3, skopeo and the other OS packages, which
+# .devcontainer/Dockerfile installs with apt and scripts/00-host-setup.sh with pacman.
 [tools]
 # Backstage's create-app only accepts Node 22 or 24.
 node = "24"
 # 80-backstage.sh wants classic yarn; 2+ comes from corepack.
 yarn = "1"
-python = "3.14"
 go = "1.27"
 jq = "1.8"
 yq = "4.54"
@@ -25,8 +24,7 @@ kubebuilder = "4.16"
 
 argocd = "3.5"
 argo-rollouts = "1.10"
-# aqua's registry entry hands Apple Silicon the x86_64 build.
-"github:argoproj/argo-workflows" = "4.1"
+argo = "4.1"
 flux2 = "2.9"
 tekton-cli = "0.46"
 crossplane-cli = "2.5"
@@ -39,12 +37,13 @@ linkerd = "edge"
 kubeseal = "0.40"
 trivy = "0.74"
 cosign = "3.1"
-"github:kubecost/kubectl-cost" = "0.6"
+# Built from source: kubecost publishes no linux-arm64 binary.
+"go:github.com/kubecost/kubectl-cost/cmd/kubectl-cost" = "0.6"
 
 [settings]
 lockfile = true
-# The lab runs on x86_64 Linux; contributors also work on macOS.
-lockfile_platforms = ["linux-x64", "linux-arm64", "macos-x64", "macos-arm64"]
+# Linux only: on macOS and Windows the lab runs in .devcontainer/.
+lockfile_platforms = ["linux-x64", "linux-arm64"]
 
 [tasks.setup]
 description = "Shell completion, Helm indexes and the versions report"

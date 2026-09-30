@@ -1,0 +1,13 @@
+{
+  "name": "cnpe-exam-prep",
+  "build": { "dockerfile": "Dockerfile", "context": ".." },
+  "workspaceFolder": "/workspaces/cnpe-exam-prep",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/cnpe-exam-prep,type=bind",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { "moby": false }
+  },
+  "runArgs": ["--ulimit", "nofile=1048576:1048576"],
+  "hostRequirements": { "cpus": 4, "memory": "8gb" },
+  "postCreateCommand": "mise install --locked",
+  "postStartCommand": "sudo sysctl -p scripts/sysctl.conf || true"
+}

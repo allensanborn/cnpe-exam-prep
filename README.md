@@ -160,6 +160,16 @@ make validate                   # 71 functional checks
 make urls                       # where everything is
 ```
 
+### On macOS or Windows: the devcontainer
+
+`.devcontainer/` gives you the same Linux environment anywhere Docker runs. Open the
+clone in VS Code and choose **Reopen in Container**, or run
+`npx @devcontainers/cli up --workspace-folder .`. The image carries every CLI from
+`mise.lock` plus the completion and `k` alias from `make tools`. The cluster runs
+in Docker-in-Docker inside it, so skip `make host` and `make tools` and start at
+`make core`. The `scripts/sysctl.conf` limits are applied on each start. Give the
+Docker VM at least 8 GB for `make core` and about 16 GB for `make full`.
+
 Run the layers one at a time and watch `make status` in between. Running two at once on this hardware makes both slower.
 
 ### What needs root, and what it touches

@@ -1,7 +1,9 @@
 # Updating the lab tools
 
 Every CLI is pinned in `mise.toml` to a major or major.minor version, and
-`mise.lock` records the exact build, download URL and checksum for Linux and macOS.
+`mise.lock` records the exact build, download URL and checksum for x86_64 and arm64
+Linux. On macOS and Windows the tools run in `.devcontainer/`, which installs from
+the same lock.
 `make tools` installs those locked builds and runs `mise run setup` (completion,
 the `~/.bashrc` block, Helm indexes, `.lab-versions.json`). CI installs Node and
 ShellCheck from the same lock.
@@ -9,7 +11,8 @@ ShellCheck from the same lock.
 To move to newer releases, run `make refresh`: `mise upgrade` takes the newest
 release within each version in `mise.toml` and rewrites `mise.lock`. Use
 `mise upgrade --bump` to raise the versions in `mise.toml` too. Commit both files
-together.
+together. Run it on Linux or in the devcontainer: on macOS, mise adds a macOS
+entry to the lock.
 
 `make refresh` also updates Gitea: it pulls `gitea/gitea:latest` when a
 Gitea container already exists. It does not create Gitea on a machine that has

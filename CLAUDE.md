@@ -80,7 +80,8 @@ Three independent parts share the repo:
   `lab.env.example`) and provides `helmi`, `kctx`, `wait_rollout`, `poll`.
   `make validate` (`92-validate.sh`) proves each layer works; `make break` and
   `break-fix` inject and repair faults. CLIs are pinned in `mise.toml` and
-  `mise.lock` (`make tools`); only the kind node image is pinned in `lab.env`,
+  `mise.lock` (`make tools`), Linux only; `.devcontainer/` runs the lab on
+  macOS and Windows; only the kind node image is pinned in `lab.env`,
   Helm charts float on purpose.
 - **The study site** (`curriculum/`): static HTML, runs from `file://`. Sections
   are `0N-domain/*.html`; `assets/nav.js` is the section manifest. Hand-written JS
