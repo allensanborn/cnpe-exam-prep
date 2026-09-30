@@ -115,7 +115,7 @@ Shell tooling installed by `make tools`:
 [k9s](https://k9scli.io/) ·
 [stern](https://github.com/stern/stern) ·
 [kubectx](https://github.com/ahmetb/kubectx) ·
-[mise](https://mise.jdx.dev/) (pins Node 24 for Backstage)
+[mise](https://mise.jdx.dev/) (pins Node 24 for Backstage, and can install every CLI here instead)
 
 ## Hardware and build time
 
@@ -173,6 +173,8 @@ More than just `make host`, so it is worth knowing before you run any of it:
 - `make portal` runs `sudo npm i -g yarn` only if yarn is missing.
 
 `make tools` installs every CLI into `~/.local/bin` and needs sudo only for the `pacman` packages. Three upstream installers are piped to a shell unpinned (crossplane, istioctl, linkerd), which is how those projects document installation, but read them first if that bothers you.
+
+On a machine with mise, `mise install` in the clone installs the same CLIs from `mise.toml`, at the exact builds and checksums in `mise.lock`. Those stay put until someone runs `mise upgrade`, where `make tools` always takes the latest release.
 
 ## Targets
 

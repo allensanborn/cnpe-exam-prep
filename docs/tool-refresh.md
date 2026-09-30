@@ -18,6 +18,12 @@ output and binary hashes, the exact Helm chart versions that installs actually
 landed, and known image references or digests. Attach it when reporting an
 upstream compatibility problem.
 
+`mise.toml` pins the same CLIs to a major or major.minor version, and `mise.lock`
+records the exact build, download URL and checksum for Linux and macOS. CI installs
+Node and ShellCheck from the lock. To move the pins, run `mise upgrade` (or
+`mise upgrade --bump` to raise the versions in `mise.toml` too) and commit both
+files together.
+
 The scheduled `Cluster smoke` GitHub Actions workflow checks the current kind
 release against the configured Kubernetes node image once a week. It runs the
 same `make up` path with `CNPE_SMOKE=1`, then tests node readiness, scheduling,
