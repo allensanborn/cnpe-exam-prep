@@ -9,6 +9,23 @@ docker info >/dev/null 2>&1 || die "cannot talk to the docker daemon.
      (check: id -nG | grep -w docker). Fix, then log out and back in:
        sudo usermod -aG docker \$USER      # or re-run: make host"
 
+# Docker's memory is the ceiling for every layer: on macOS and Windows that is
+# the VM's limit, which nothing inside the devcontainer can raise.
+MEM_GB=$(( $(docker info --format '{{.MemTotal}}') / 1024 / 1024 / 1024 ))
+if [ "$MEM_GB" -lt 15 ]; then
+  case "$(docker info --format '{{.KernelVersion}}')" in
+    *orbstack*) raise="orb config set memory_mib 16384, then: orb stop && orb start" ;;
+    *linuxkit*) raise="Docker Desktop: Settings > Resources > Memory" ;;
+    *)          raise="close other workloads, or add RAM" ;;
+  esac
+  if [ "$MEM_GB" -lt 8 ]; then
+    warn "Docker has ${MEM_GB} GB; 'make core' needs ~4 GB plus headroom and may thrash"
+  else
+    warn "Docker has ${MEM_GB} GB: enough for 'make core' (~4 GB), not 'make full' (~14 GB)"
+  fi
+  warn "to raise it: $raise"
+fi
+
 # The apiserver needs this directory to hold a file named exactly policy.yaml.
 AUDIT_DIR="$REPO_ROOT/.audit"
 mkdir -p "$AUDIT_DIR" /tmp/cnpe-lab
